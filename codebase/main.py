@@ -8,7 +8,6 @@ from starlette.responses import HTMLResponse
 from starlette.websockets import WebSocket, WebSocketDisconnect
 
 import os
-# 
 AUTH_TOKEN = os.environ.get('AUTH_TOKEN')
 MAX_SESSION_TIME = 300 # 5 minutes, max time in seconds a authentication session should last. (how much time the user has to sign the message with Metamask)
 MAX_SESSIONS = 999999 # Max number of sessions until sessions will be kicked killed, that is, sessions that are less than MAX_SESSION_TIME old
@@ -105,7 +104,7 @@ async def websocket_endpoint(websocket: WebSocket, otk:str,):
     await cache[otk].connect(websocket)
     try:
         while True: 
-            data = await websocket.receive_text()
+            data = await websocket.receive_text() 
             await websocket.send_text(f"Message text was: {data}")
     except WebSocketDisconnect:
         cache[otk].remove(websocket)
@@ -116,12 +115,12 @@ async def push_to_connected_websockets(otk:str, message: str, x_auth_token: Opti
     if x_auth_token != AUTH_TOKEN:
         raise HTTPException(status_code=401, detail={'errorCode': 1002, 'message': 'x-auth-token provided is invalid.'})
 
-    try:
+    if cache.get(otk) is not None:
         await cache[otk].push(f"! Push notification: {message} !")
-    except:
+    else:
         raise HTTPException(status_code=400, detail={'errorCode': 1001, 'message': 'OTK for authentication session has expired or does not exist.'})
 
-    return {'success':True,'message':'Auth data was sent successfully'}
+    # return {'success':True,'message':'Auth data was sent successfully'}
 
 async def primeWebsocketConnection(otk:str):
 
@@ -129,4 +128,4 @@ async def primeWebsocketConnection(otk:str):
         # raise HTTPException(status_code=400, detail="Authentication session using this OTK has already been primed.")
         cache[otk] = Notifier(otk)
 
-        await cache[otk].generator.asend(None)
+        await cache.get(otk).generator.asend(None)
