@@ -14,10 +14,10 @@ MAX_SESSION_TIME = 300 # 5 minutes, max time in seconds a authentication session
 MAX_SESSIONS = 999999 # Max number of sessions until sessions will be kicked killed, that is, sessions that are less than MAX_SESSION_TIME old
 app = FastAPI()
 
-
-app.add_middleware(
-    TrustedHostMiddleware, allowed_hosts=["tipcryp.to", "*.tipcryp.to", "localhost"] 
-)
+# Testing EB deployment
+# app.add_middleware(
+#     TrustedHostMiddleware, allowed_hosts=["tipcryp.to", "*.tipcryp.to", "localhost"] 
+# )
 
 html = """
 <!DOCTYPE html>
