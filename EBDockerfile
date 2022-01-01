@@ -1,0 +1,18 @@
+FROM python:3.7
+EXPOSE 80
+
+WORKDIR /opt/code
+
+RUN apt -y update
+RUN apt -y install git
+RUN apt -y install htop
+
+RUN git clone https://github.com/JamesWRC/dauth-backend-example.git
+
+WORKDIR /opt/code/dauth-backend-example/codebase
+
+# install additional dependencies
+RUN pip install -r requirements.txt
+
+# set workdir to have subscripts in scope
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80", "--reload"]
