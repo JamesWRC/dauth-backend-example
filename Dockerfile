@@ -1,5 +1,5 @@
 FROM python:3.7
-EXPOSE 8080 
+EXPOSE 80 
 RUN apt -y update
 
 # copy whole installation (minus dockerignore)
