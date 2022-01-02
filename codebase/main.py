@@ -2,7 +2,7 @@ from cachetools import TTLCache
 
 from typing import List, Optional
 
-from fastapi import FastAPI, HTTPException, Header
+from fastapi import FastAPI, HTTPException, Header, Body
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from starlette.responses import HTMLResponse
 from starlette.websockets import WebSocket, WebSocketDisconnect
@@ -36,7 +36,8 @@ html = """
 
             var url = new URL(location.href);
             var otk = url.searchParams.get("otk");
-            var ws = new WebSocket('ws://prod-dauth-backend.us-east-1.elasticbeanstalk.com:80/ws/' + otk);
+            var ws = new WebSocket('ws://prod-dauth-backend.us-east-1.elasticbeanstalk.com/ws/' + otk);
+            //var ws = new WebSocket('ws://localhost/ws/' + otk);
             ws.onmessage = function(event) {
                 var messages = document.getElementById('messages')
                 var message = document.createElement('li')
@@ -110,12 +111,14 @@ async def websocket_endpoint(websocket: WebSocket, otk:str,):
         cache.get(otk).remove(websocket)
 
 
-@app.post("/push/{otk}/{message}")
-async def push_to_connected_websockets(otk:str, message: str, x_auth_token: Optional[str] = Header(None)):
+@app.post("/push/{otk}")
+async def push_to_connected_websockets(otk:str, x_auth_token: Optional[str] = Header(None), payload: dict = Body(...)):
     if x_auth_token != AUTH_TOKEN:
         raise HTTPException(status_code=401, detail={'errorCode': 1002, 'message': 'x-auth-token is not provided or invalid.'})
 
     if cache.get(otk) is not None:
+        auth = payload['logInSuccess']
+        message = payload['logInMessage']
         await cache[otk].push(f"! Push notification: {message} !")
     else:
         raise HTTPException(status_code=400, detail={'errorCode': 1001, 'message': 'OTK for authentication session has expired or does not exist.', 'error': str(cache.keys())})
