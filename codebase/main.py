@@ -36,7 +36,7 @@ html = """
 
             var url = new URL(location.href);
             var otk = url.searchParams.get("otk");
-            var ws = new WebSocket('ws://localhost:80/ws/' + otk);
+            var ws = new WebSocket('ws://localhost:8080/ws/' + otk);
             ws.onmessage = function(event) {
                 var messages = document.getElementById('messages')
                 var message = document.createElement('li')
@@ -76,7 +76,7 @@ class Notifier:
         await self.generator.asend(msg)
 
     async def connect(self, websocket: WebSocket):
-        await websocket.accept()
+        await websocket.accept() 
         self.connections.append(websocket)
 
     def remove(self, websocket: WebSocket):
@@ -101,24 +101,24 @@ cache = TTLCache(maxsize=1, ttl=300)
 @app.websocket("/ws/{otk}")
 async def websocket_endpoint(websocket: WebSocket, otk:str,):
     await primeWebsocketConnection(otk)
-    await cache[otk].connect(websocket)
+    await cache.get(otk).connect(websocket)
     try:
         while True: 
             data = await websocket.receive_text() 
             await websocket.send_text(f"Message text was: {data}")
     except WebSocketDisconnect:
-        cache[otk].remove(websocket)
+        cache.get(otk).remove(websocket)
 
 
 @app.post("/push/{otk}/{message}")
 async def push_to_connected_websockets(otk:str, message: str, x_auth_token: Optional[str] = Header(None)):
     if x_auth_token != AUTH_TOKEN:
-        raise HTTPException(status_code=401, detail={'errorCode': 1002, 'message': 'x-auth-token provided is invalid.'})
+        raise HTTPException(status_code=401, detail={'errorCode': 1002, 'message': 'x-auth-token is not provided or invalid.'})
 
     if cache.get(otk) is not None:
         await cache[otk].push(f"! Push notification: {message} !")
     else:
-        raise HTTPException(status_code=400, detail={'errorCode': 1001, 'message': 'OTK for authentication session has expired or does not exist.'})
+        raise HTTPException(status_code=400, detail={'errorCode': 1001, 'message': 'OTK for authentication session has expired or does not exist.', 'error': str(cache.keys())})
 
     # return {'success':True,'message':'Auth data was sent successfully'}
 
