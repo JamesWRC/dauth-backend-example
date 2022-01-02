@@ -36,7 +36,7 @@ html = """
 
             var url = new URL(location.href);
             var otk = url.searchParams.get("otk");
-            var ws = new WebSocket('ws://http://prod-dauth-backend.us-east-1.elasticbeanstalk.com:80/ws/' + otk);
+            var ws = new WebSocket('ws://prod-dauth-backend.us-east-1.elasticbeanstalk.com:80/ws/' + otk);
             ws.onmessage = function(event) {
                 var messages = document.getElementById('messages')
                 var message = document.createElement('li')
