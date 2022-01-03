@@ -8,6 +8,7 @@ from starlette.responses import HTMLResponse
 from starlette.websockets import WebSocket, WebSocketDisconnect
 
 import os
+import json
 AUTH_TOKEN = os.environ.get('AUTH_TOKEN')
 MAX_SESSION_TIME = 300 # 5 minutes, max time in seconds a authentication session should last. (how much time the user has to sign the message with Metamask)
 MAX_SESSIONS = 999999 # Max number of sessions until sessions will be kicked killed, that is, sessions that are less than MAX_SESSION_TIME old
@@ -108,7 +109,11 @@ async def websocket_endpoint(websocket: WebSocket, otk:str):
             data = await websocket.receive_text() 
             await websocket.send_text(f"Message text was: {data}")
     except WebSocketDisconnect:
-        cache.get(otk).remove(websocket)
+        try:
+            cache.get(otk).remove(websocket)
+        except Exception as e:
+            print("An error has occured during handling ")
+            print(e)
 
 
 @app.post("/push/{otk}")
@@ -119,7 +124,7 @@ async def push_to_connected_websockets(otk:str, x_auth_token: Optional[str] = He
     if cache.get(otk) is not None:
         auth = payload['logInSuccess']
         message = payload['logInMessage']
-        await cache[otk].push(f"! Push notification: {message} !")
+        await cache[otk].push(json.dumps({'payload': payload}))
     else:
         raise HTTPException(status_code=400, detail={'errorCode': 1001, 'message': 'OTK for authentication session has expired or does not exist.', 'error': str(cache.keys())})
 
