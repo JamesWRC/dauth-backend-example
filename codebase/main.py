@@ -100,7 +100,7 @@ cache = TTLCache(maxsize=1, ttl=300)
 #              www.example.com/ws/    (OTK) ONE TIME KEY 
 # Example URL: www.example.com/ws/26842a36-b3ee-4809-ab6e-9a85c36af6ad
 @app.websocket("/ws/{otk}")
-async def websocket_endpoint(websocket: WebSocket, otk:str,):
+async def websocket_endpoint(websocket: WebSocket, otk:str):
     await primeWebsocketConnection(otk)
     await cache.get(otk).connect(websocket)
     try:
