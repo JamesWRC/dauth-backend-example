@@ -123,6 +123,7 @@ async def push_to_connected_websockets(otk:str, x_auth_token: Optional[str] = He
 
     if cache.get(otk) is not None:
         try:
+            print(payload)
             auth = payload['logInSuccess']
             message = payload['logInMessage']
             await cache[otk].push(json.dumps({'payload': payload}))
