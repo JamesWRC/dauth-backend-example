@@ -122,9 +122,13 @@ async def push_to_connected_websockets(otk:str, x_auth_token: Optional[str] = He
         raise HTTPException(status_code=401, detail={'errorCode': 1002, 'message': 'x-auth-token is not provided or invalid.'})
 
     if cache.get(otk) is not None:
-        auth = payload['logInSuccess']
-        message = payload['logInMessage']
-        await cache[otk].push(json.dumps({'payload': payload}))
+        try:
+            auth = payload['logInSuccess']
+            message = payload['logInMessage']
+            await cache[otk].push(json.dumps({'payload': payload}))
+        except Exception as e:
+            print(" ERROR handling push body")
+            print(e)
     else:
         raise HTTPException(status_code=400, detail={'errorCode': 1001, 'message': 'OTK for authentication session has expired or does not exist.', 'error': str(cache.keys())})
 
