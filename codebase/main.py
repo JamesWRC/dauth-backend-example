@@ -141,4 +141,4 @@ def primeWebsocketConnection(otk:str):
         # raise HTTPException(status_code=400, detail="Authentication session using this OTK has already been primed.")
         cache[otk] = Notifier(otk)
 
-        cache.get(otk).generator.asend(None)
+        cache.get(otk).generator.send(None)
