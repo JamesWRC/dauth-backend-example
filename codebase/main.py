@@ -70,6 +70,9 @@ class Notifier:
         self.generator = self.get_notification_generator()
         self.numMessagesSent = 0
 
+    def getNumMessagesSent(self):
+        return self.numMessagesSent
+
     async def get_notification_generator(self):
         while True:
             message = yield
@@ -126,7 +129,8 @@ async def push_to_connected_websockets(otk:str, x_auth_token: Optional[str] = He
         try:
             print(payload)
             await cache[otk].push(json.dumps({'payload': payload}))
-            
+            return {"numMessages": cache.get(otk).getNumMessagesSent()}
+
         except Exception as e:
             print(" ERROR handling push body")
             print(e)
