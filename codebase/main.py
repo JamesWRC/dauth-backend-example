@@ -68,6 +68,7 @@ class Notifier:
         self.otk = otk
         self.connections: List[WebSocket] = []
         self.generator = self.get_notification_generator()
+        self.numMessagesSent = 0
 
     async def get_notification_generator(self):
         while True:
@@ -112,7 +113,7 @@ async def websocket_endpoint(websocket: WebSocket, otk:str):
         try:
             cache.get(otk).remove(websocket)
         except Exception as e:
-            print("An error has occured during handling ")
+            print("An error has occurred during handling ")
             print(e)
 
 
@@ -124,8 +125,6 @@ async def push_to_connected_websockets(otk:str, x_auth_token: Optional[str] = He
     if cache.get(otk) is not None:
         try:
             print(payload)
-            auth = payload['logInSuccess']
-            message = payload['logInMessage']
             await cache[otk].push(json.dumps({'payload': payload}))
         except Exception as e:
             print(" ERROR handling push body")
