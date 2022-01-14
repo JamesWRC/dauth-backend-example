@@ -59,7 +59,7 @@ html = """
 
 
 @app.get("/")
-def get():
+async def get():
     return HTMLResponse(html)
 
 # This class is used to notify the login page of the authentication result, using websockets
@@ -70,28 +70,28 @@ class Notifier:
         self.generator = self.get_notification_generator()
         self.numMessagesSent = 0
 
-    def get_notification_generator(self):
+    async def get_notification_generator(self):
         while True:
             message = yield
-            self._notify(message)
+            await self._notify(message)
 
-    def push(self, msg: str):
-        self.generator.send(msg)
+    async def push(self, msg: str):
+        await self.generator.asend(msg)
 
-    def connect(self, websocket: WebSocket):
-        websocket.accept() 
+    async def connect(self, websocket: WebSocket):
+        await websocket.accept() 
         self.connections.append(websocket)
 
     def remove(self, websocket: WebSocket):
         self.connections.remove(websocket)
 
-    def _notify(self, message: str):
+    async def _notify(self, message: str):
         living_connections = []
         while len(self.connections) > 0:
             # Looping like this is necessary in case a disconnection is handled
             # during await websocket.send_text(message)
             websocket = self.connections.pop()
-            websocket.send_text(message)
+            await websocket.send_text(message)
             living_connections.append(websocket)
         self.connections = living_connections
 
@@ -102,13 +102,13 @@ cache = TTLCache(maxsize=1, ttl=300)
 #              www.example.com/ws/    (OTK) ONE TIME KEY 
 # Example URL: www.example.com/ws/26842a36-b3ee-4809-ab6e-9a85c36af6ad
 @app.websocket("/ws/{otk}")
-def websocket_endpoint(websocket: WebSocket, otk:str):
-    primeWebsocketConnection(otk)
-    cache.get(otk).connect(websocket)
+async def websocket_endpoint(websocket: WebSocket, otk:str):
+    await primeWebsocketConnection(otk)
+    await cache.get(otk).connect(websocket)
     try:
         while True: 
-            data = websocket.receive_text() 
-            websocket.send_text(f"Message text was: {data}")
+            data = await websocket.receive_text() 
+            await websocket.send_text(f"Message text was: {data}")
     except WebSocketDisconnect:
         try:
             cache.get(otk).remove(websocket)
@@ -118,15 +118,15 @@ def websocket_endpoint(websocket: WebSocket, otk:str):
 
 
 @app.post("/push/{otk}")
-def push_to_connected_websockets(otk:str, x_auth_token: Optional[str] = Header(None), payload: dict = Body(...)):
+async def push_to_connected_websockets(otk:str, x_auth_token: Optional[str] = Header(None), payload: dict = Body(...)):
     if x_auth_token != AUTH_TOKEN:
         raise HTTPException(status_code=401, detail={'errorCode': 1002, 'message': 'x-auth-token is not provided or invalid.'})
 
     if cache.get(otk) is not None:
         try:
             print(payload)
-            cache[otk].push(json.dumps({'payload': payload}))
-
+            await cache[otk].push(json.dumps({'payload': payload}))
+            
         except Exception as e:
             print(" ERROR handling push body")
             print(e)
@@ -135,10 +135,10 @@ def push_to_connected_websockets(otk:str, x_auth_token: Optional[str] = Header(N
 
     # return {'success':True,'message':'Auth data was sent successfully'}
 
-def primeWebsocketConnection(otk:str):
+async def primeWebsocketConnection(otk:str):
 
     if cache.get(otk) is None:
         # raise HTTPException(status_code=400, detail="Authentication session using this OTK has already been primed.")
         cache[otk] = Notifier(otk)
 
-        cache.get(otk).generator.send(None)
+        await cache.get(otk).generator.asend(None)
