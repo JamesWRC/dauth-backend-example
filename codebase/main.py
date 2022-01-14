@@ -80,6 +80,7 @@ class Notifier:
 
     async def push(self, msg: str):
         await self.generator.asend(msg)
+        self.numMessagesSent+=1
 
     async def connect(self, websocket: WebSocket):
         await websocket.accept() 
