@@ -5,5 +5,24 @@ services:
     restart: always
     env_file:
       - .env
+  coreapi:
+    build:
+       context: .
+    expose:
+      - 80
+    ports:
+      - 80
+    env_file:
+      - .env
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.coreapi.rule=Host(`api.getstrut.com`)
+      - traefik.http.routers.coreapi.tls=true
+      - traefik.http.routers.coreapi.tls.certresolver=myresolver
+      - traefik.http.routers.coreapi.entrypoints=websecure
+      - traefik.http.services.coreapi.loadbalancer.server.port=5000
+      - "traefik.frontend.headers.SSLProxyHeaders=X-Forwarded-Proto: https"
+      - "traefik.frontend.headers.SSLRedirect=true"
 volumes:
   logvolume01: {}
+
