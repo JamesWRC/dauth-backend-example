@@ -1,0 +1,7 @@
+version: "3.9"  # optional since v1.27.0
+services:
+  cloudflare-ddns:
+    image: oznu/cloudflare-ddns:latest
+    restart: always
+volumes:
+  logvolume01: {}
