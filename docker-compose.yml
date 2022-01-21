@@ -8,10 +8,6 @@ services:
   dauth:
     build:
        context: .
-    expose:
-      - 3000
-    ports:
-      - 3000:3000
     env_file:
       - .env
     labels:
@@ -20,9 +16,7 @@ services:
       - traefik.http.routers.dauth.tls=true
       - traefik.http.routers.dauth.tls.certresolver=myresolver
       - traefik.http.routers.dauth.entrypoints=websecure
-      - traefik.http.services.dauth.loadbalancer.server.port=3000
-      - "traefik.frontend.headers.SSLProxyHeaders=X-Forwarded-Proto: https"
-      - "traefik.frontend.headers.SSLRedirect=true"
+
       
   traefik:
     build: 
