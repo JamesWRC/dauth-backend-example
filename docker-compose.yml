@@ -16,11 +16,11 @@ services:
       - .env
     labels:
       - traefik.enable=true
-      - traefik.http.routers.coreapi.rule=Host(`soc1.dauth.dev`)
-      - traefik.http.routers.coreapi.tls=true
-      - traefik.http.routers.coreapi.tls.certresolver=myresolver
-      - traefik.http.routers.coreapi.entrypoints=websecure
-      - traefik.http.services.coreapi.loadbalancer.server.port=3000
+      - traefik.http.routers.dauth.rule=Host(`soc1.dauth.dev`)
+      - traefik.http.routers.dauth.tls=true
+      - traefik.http.routers.dauth.tls.certresolver=myresolver
+      - traefik.http.routers.dauth.entrypoints=websecure
+      - traefik.http.services.dauth.loadbalancer.server.port=3000
       - "traefik.frontend.headers.SSLProxyHeaders=X-Forwarded-Proto: https"
       - "traefik.frontend.headers.SSLRedirect=true"
       
