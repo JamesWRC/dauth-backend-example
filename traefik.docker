@@ -1,0 +1,4 @@
+FROM traefik:v2.5
+
+RUN touch acme.json \
+  && chmod 600 acme.json

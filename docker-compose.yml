@@ -5,24 +5,39 @@ services:
     restart: always
     env_file:
       - .env
-  coreapi:
+  dauth:
     build:
        context: .
     expose:
-      - 8080
+      - 3000
     ports:
-      - 8080
+      - 3000
     env_file:
       - .env
     labels:
       - traefik.enable=true
-      - traefik.http.routers.coreapi.rule=Host(`api.getstrut.com`)
+      - traefik.http.routers.coreapi.rule=Host(`soc1.dauth.dev`)
       - traefik.http.routers.coreapi.tls=true
       - traefik.http.routers.coreapi.tls.certresolver=myresolver
       - traefik.http.routers.coreapi.entrypoints=websecure
-      - traefik.http.services.coreapi.loadbalancer.server.port=5000
+      - traefik.http.services.coreapi.loadbalancer.server.port=3000
       - "traefik.frontend.headers.SSLProxyHeaders=X-Forwarded-Proto: https"
       - "traefik.frontend.headers.SSLRedirect=true"
-volumes:
-  logvolume01: {}
-
+      
+  traefik:
+    build: 
+      context: .
+      dockerfile: traefik.docker
+    ports:
+      - 8080
+      - 80
+      - 443
+    expose:
+      - 8080
+      - 80
+      - 443
+    env_file:
+      - .env
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./services/traefik/:/etc/traefik/"
