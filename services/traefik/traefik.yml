@@ -3,7 +3,7 @@ log:
 
 entryPoints:
   websecure:
-    address: ':443'
+    address: ':3000'
 
 providers:
   docker:
