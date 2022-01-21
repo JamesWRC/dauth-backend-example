@@ -11,7 +11,7 @@ services:
     expose:
       - 3000
     ports:
-      - 3000
+      - 3000:3000
     env_file:
       - .env
     labels:
@@ -29,9 +29,9 @@ services:
       context: .
       dockerfile: traefik.docker
     ports:
-      - 8080
-      - 80
-      - 443
+      - 8080:8080
+      - 80:80
+      - 443:443
     expose:
       - 8080
       - 80
