@@ -2,8 +2,8 @@ log:
   level: DEBUG
 
 api:
-  insecure: true
-  
+  dashboard: true
+
 entryPoints:
   websecure:
     address: ':443'
