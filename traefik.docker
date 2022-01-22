@@ -1,3 +1,3 @@
 FROM traefik:v2.5
 
-RUN chmod 600 /acme.json
+RUN chmod 600 acme.json
