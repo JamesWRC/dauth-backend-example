@@ -1,4 +1,3 @@
 FROM traefik:v2.5
 
-RUN touch /etc/traefik/acme.json \
-  && chmod 600 /etc/traefik/acme.json
+RUN chmod 600 /acme.json
