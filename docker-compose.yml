@@ -12,12 +12,11 @@ services:
       - .env
     labels:
       - traefik.enable=true
-      - traefik.http.routers.dauth.rule=Host(`${SUBDOMAIN}.${DOMAIN_LINK}`)
+      - traefik.http.routers.dauth.rule=Host(`soc1.dauth.dev`)
       - traefik.http.routers.dauth.tls=true
       - traefik.http.routers.dauth.tls.certresolver=myresolver
       - traefik.http.routers.dauth.entrypoints=websecure
 
-      
   traefik:
     build: 
       context: .

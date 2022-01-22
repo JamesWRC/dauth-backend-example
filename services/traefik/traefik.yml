@@ -17,7 +17,7 @@ certificatesResolvers:
   myresolver:
     acme:
       email: james.cockshott@pm.me
-      storage: acme.json
+      storage: /etc/traefik/acme.json
       # caServer: "https://acme-staging-v02.api.letsencrypt.org/directory"
       dnsChallenge:
         provider: cloudflare
