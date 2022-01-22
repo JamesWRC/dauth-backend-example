@@ -1,4 +1,3 @@
 FROM traefik:v2.5
 
-RUN chmod 600 /etc/traefik/acme.json
 #/var/app/current/
