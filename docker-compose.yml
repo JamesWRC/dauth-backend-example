@@ -1,0 +1,49 @@
+version: "3.9"  # optional since v1.27.0
+services:
+  cloudflare-ddns:
+    image: oznu/cloudflare-ddns:latest
+    restart: always
+    env_file:
+      - .env
+  dauth:
+    build:
+       context: .
+    env_file:
+      - .env
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.dauth.rule=Host(`soc1.dauth.dev`)
+      - traefik.http.routers.dauth.tls=true
+      - traefik.http.routers.dauth.tls.certresolver=myresolver
+      - traefik.http.routers.dauth.entrypoints=websecure
+
+  traefik:
+    build: 
+      context: .
+      dockerfile: traefik.docker
+    ports:
+      - 80:80
+      - 443:443
+    expose:
+      - 80
+      - 443
+    env_file:
+      - .env
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./services/traefik/:/etc/traefik/"
+    depends_on:
+      - cf_acme_kv_cache
+  
+  cf_acme_kv_cache:
+    image: jameswrc/cfacmekvcache
+    env_file:
+      - .env
+    volumes:
+      - "./services/traefik/:/etc/traefik/"
+    healthcheck:
+      test: ["CMD", "sh", "isReadyAndHealthy.sh"]
+      interval: 20s
+      timeout: 1s
+      retries: 10
+      start_period: 10s
