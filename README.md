@@ -18,8 +18,8 @@ config
     - storage, can change this to wherever the acme.json file will be. You can leave this option as is if you dont change the path of this file anywhere else.
 
 ## CF Acme Cache
-Repo: | Docker Image: 
 <b>Optional | Recommend for AWS spot instances</b>
+Repo: [GitHub](https://github.com/JamesWRC/cfAcmeKVCache) | Docker Image: [Docker-Registry](https://hub.docker.com/r/jameswrc/cfacmekvcache) <br>
 1.  Set up Cloudflare API access.
     - Create a scoped token in your account with the following scopes:
         - Account > Workers KV Storage > Edit
@@ -28,10 +28,10 @@ Repo: | Docker Image:
 
 
 | Envname       | Description   | Required | example |
-| ------------- |:-------------| :------: | :------ |
+| ------ |:--------------------| :------: | :------ |
 | CFA_CACHE_CF_API_KEY      | The API token used to access the KV. | ✓       | xxxxxxxxxxxxx |
 | CFA_CACHE_ACCOUNT_ID      | The ID of your Cloudflare Account.      | ✓       |xxxxxxxxxxxxx |
-| CFA_CACHE_KV_NAMESPACE | The namespace of the KV.      | ✓       |test |
+| CFA_CACHE_KV_NAMESPACE | The namespace of the KV.      | ✓       |microservice_acme_cert_cache |
 | CFA_CACHE_ACME_FILEPATH | The filepath to where the acme.js file will be stored. This file needs to be in a volume that Traefik is set to access.      | ✓       |/etc/traefik/acme.json |
 | CFA_CACHE_KV_NAME | The name of the KV. Normally this is the name of the microservice or subdomain that will be used to access this server.      | ✓       |api1 |
 | CFA_CACHE_ACME_ENCRYPTION_KEY | The key / secret used to encrypt and decrypt the acme.json file. If you dont specify one or dont provide this environment variable NO encryption will be used. acme.json will be stored in plain text which is DANGEROUS!      | x       |mySecretKey |
