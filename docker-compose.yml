@@ -31,6 +31,9 @@ services:
       - 443
     env_file:
       - .env
+    command: |
+      --api.dashboard=true
+
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.dashboard.rule=PathPrefix(`/api`) || PathPrefix(`/dashboard`)"
