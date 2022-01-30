@@ -31,14 +31,14 @@ services:
       - 443
     env_file:
       - .env
-    command: |
-      --api
-      --api.insecure=true
-      --api.dashboard=true
-      --providers.kubernetesingress
-      --providers.kubernetescrd
-      --entrypoints.web.Address=:80
-      --entrypoints.websecure.Address=:443
+    command:
+      - --global.checkNewVersion=true
+      - --global.sendAnonymousUsage=true
+      - --entryPoints.web.address=:80
+      - --entryPoints.websecure.address=:443
+      - --log.level=DEBUG
+      - --api
+      - --ping
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.dashboard.rule=Host(`${SUBDOMAIN}.${ZONE}`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
