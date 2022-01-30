@@ -32,11 +32,10 @@ services:
     env_file:
       - .env
     labels:
-      - traefik.enable=true
-      - "traefik.http.routers.dashboard.rule=(PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
-      - "traefik.http.routers.traefik-secure.service=api@internal"
-      - "traefik.http.middlewares.test-auth.basicauth.users=test:$$apr1$$n91oqhev$$2mVzSjhH.U1RPN94uVdoe0"
-      - "traefik.http.routers.traefik-secure.middlewares=traefik-auth"
+      - "traefik.enable=true"
+      - "traefik.http.routers.dashboard.rule=PathPrefix(`/api`) || PathPrefix(`/dashboard`)"
+      - "traefik.http.routers.dashboard.entrypoints=traefik"
+      - "traefik.http.routers.dashboard.service=api@internal"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "./services/traefik/:/etc/traefik/"
