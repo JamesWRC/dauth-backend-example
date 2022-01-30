@@ -32,13 +32,19 @@ services:
     env_file:
       - .env
     command: |
+      --api
+      --api.insecure=true
       --api.dashboard=true
-
+      --providers.kubernetesingress
+      --providers.kubernetescrd
+      --entrypoints.web.Address=:80
+      --entrypoints.websecure.Address=:443
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.dashboard.rule=PathPrefix(`/api`) || PathPrefix(`/dashboard`)"
+      - "traefik.http.routers.dashboard.rule=Host(`${SUBDOMAIN}.${ZONE}`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
       - "traefik.http.routers.dashboard.entrypoints=traefik"
       - "traefik.http.routers.dashboard.service=api@internal"
+    
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "./services/traefik/:/etc/traefik/"
