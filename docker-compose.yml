@@ -47,7 +47,7 @@ services:
       - cf_acme_kv_cache
   
   cf_acme_kv_cache:
-    image: jameswrc/cfacmekvcache
+    image: jameswrc/cfacmekvcache:latest
     env_file:
       - .env
     volumes:
@@ -56,5 +56,5 @@ services:
       test: ["CMD", "sh", "isReadyAndHealthy.sh"]
       interval: 20s
       timeout: 1s
-      retries: 10
+      retries: 30
       start_period: 10s
