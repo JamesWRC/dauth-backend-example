@@ -33,6 +33,7 @@ services:
       - .env
     command:
       - "--api=true"
+      - "--api.insecure=true"
     labels:
       - "traefik.http.routers.dashboard.rule=Host(`traefik.dauth.dev`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
       - "traefik.http.routers.dashboard.service=api@internal"
