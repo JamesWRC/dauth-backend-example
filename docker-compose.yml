@@ -3,32 +3,39 @@ services:
   cloudflare-ddns:
     image: oznu/cloudflare-ddns:latest
     restart: always
+    # env_file Will be overriden by the environmen variables in elasticbeanstalk configuration.
     env_file:
       - .env
   dauth:
     build:
        context: .
+    # env_file Will be overriden by the environmen variables in elasticbeanstalk configuration.
     env_file:
-      - .env
+      - .env 
     labels:
       - traefik.enable=true
-      - traefik.http.routers.dauth.rule=Host(`soc1.dauth.dev`)
+      - "traefik.http.routers.dauth.rule=Host(`${SUBDOMAIN}.${ZONE}`)"
       - traefik.http.routers.dauth.tls=true
       - traefik.http.routers.dauth.tls.certresolver=myresolver
       - traefik.http.routers.dauth.entrypoints=websecure
 
   traefik:
-    build: 
-      context: .
-      dockerfile: traefik.docker
+    image: traefik:v2.5
     ports:
+      - 8080:8080
       - 80:80
       - 443:443
     expose:
+      - 8080
       - 80
       - 443
     env_file:
       - .env
+    labels:
+      - "traefik.http.routers.dashboard.rule=Host(`traefik.example.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+      - "traefik.http.routers.traefik-secure.service=api@internal"
+      - "traefik.http.middlewares.traefik-auth.basicauth.users=test:$apr1$n91oqhev$2mVzSjhH.U1RPN94uVdoe0"
+      - "traefik.http.routers.traefik-secure.middlewares=traefik-auth"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "./services/traefik/:/etc/traefik/"

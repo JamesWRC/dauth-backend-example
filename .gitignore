@@ -136,3 +136,4 @@ dmypy.json
 
 
 acme.json
+.env copy
