@@ -20,6 +20,8 @@ services:
       - traefik.http.routers.dauth.entrypoints=websecure
 
   traefik:
+    depends_on:
+      - cf_acme_kv_cache
     image: traefik:v2.5
     ports:
       - 8080:8080
@@ -56,7 +58,6 @@ services:
       - "./services/traefik/:/etc/traefik/"
     healthcheck:
       test: ["CMD", "sh", "isReadyAndHealthy.sh"]
-      interval: 20s
+      interval: 1s
       timeout: 1s
       retries: 30
-      start_period: 10s
