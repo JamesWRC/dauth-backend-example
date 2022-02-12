@@ -7,9 +7,9 @@ api:
 
 entryPoints:
   websecure:
-    address: :443
+    address: ':443'
   web:
-    address: :80
+    address: ':80'
 
 providers:
   docker:
