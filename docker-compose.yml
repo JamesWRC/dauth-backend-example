@@ -47,7 +47,7 @@ services:
       - cf_acme_kv_cache
   
   cf_acme_kv_cache:
-    image: jameswrc/cfacmekvcache:latest
+    image: jameswrc/cfacmekvcache:arm64v8
     env_file:
       - .env
     volumes:
