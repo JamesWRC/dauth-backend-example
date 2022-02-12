@@ -8,6 +8,7 @@ services:
   dauth:
     build:
        context: .
+       dockerfile: dauth.Dockerfile
     # env_file Will be overriden by the environmen variables in elasticbeanstalk configuration.
     env_file:
       - .env 
