@@ -2,7 +2,6 @@ version: "3.9"  # optional since v1.27.0
 services:
   cloudflare-ddns:
     image: oznu/cloudflare-ddns:latest
-    restart: always
     # env_file Will be overriden by the environmen variables in elasticbeanstalk configuration.
     env_file:
       - .env
