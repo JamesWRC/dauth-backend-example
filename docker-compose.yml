@@ -47,8 +47,6 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "./services/traefik/:/etc/traefik/"
-    depends_on:
-      - cf_acme_kv_cache
   
   cf_acme_kv_cache:
     image: jameswrc/cfacmekvcache:arm64v8
@@ -58,6 +56,6 @@ services:
       - "./services/traefik/:/etc/traefik/"
     healthcheck:
       test: ["CMD", "sh", "isReadyAndHealthy.sh"]
-      interval: 1s
-      timeout: 1s
+      interval: 30s
+      timeout: 60s
       retries: 30
