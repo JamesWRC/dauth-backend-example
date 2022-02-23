@@ -1,4 +1,4 @@
-version: "3.8"  # optional since v1.27.0
+version: "3"  # optional since v1.27.0
 services:
 
   cf_acme_kv_cache:
