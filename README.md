@@ -17,8 +17,13 @@ config
     - ceServer, if you have it commented out, then traefik will use the production letsencrypt servers. Only have it commented for production. Have the caServer option for testing, if its commented out then you will hit rate limits which will significantly slow development.
     - storage, can change this to wherever the acme.json file will be. You can leave this option as is if you dont change the path of this file anywhere else.
 
+3. Rename the folder '.ebextensions-example' to '.ebextensions'. This 'envConfig.config' file contains the settings for your eb-environment. The current contents of this file creates the acme.json file which stores the SSL certificate, it also opens port 443 and 8080 - in addition to the default 22 and 80.
+    - Example: If you want to allow ports on your ec2, use the sslSecurityGroupIngress config. You can change the 'FromPort' and 'ToPort' numbers to allow a certain port.
+    - Example: files, allows you to create files with specific contents and ownership. 
+
 ## CF Acme Cache
 <b>Optional | Recommend for AWS spot instances</b>
+Here am using this to carry across the SSL certificates to spot instances as they get replaced with Elastic Beanstalk.
 Repo: [GitHub](https://github.com/JamesWRC/cfAcmeKVCache) | Docker Image: [Docker-Registry](https://hub.docker.com/r/jameswrc/cfacmekvcache) <br>
 1.  Set up Cloudflare API access.
     - Create a scoped token in your account with the following scopes:
