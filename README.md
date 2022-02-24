@@ -23,6 +23,7 @@ config
 
 ## CF Acme Cache
 <b>Optional | Recommend for AWS spot instances</b>
+Here am using this to carry across the SSL certificates to spot instances as they get replaced with Elastic Beanstalk.
 Repo: [GitHub](https://github.com/JamesWRC/cfAcmeKVCache) | Docker Image: [Docker-Registry](https://hub.docker.com/r/jameswrc/cfacmekvcache) <br>
 1.  Set up Cloudflare API access.
     - Create a scoped token in your account with the following scopes:
