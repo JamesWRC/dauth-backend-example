@@ -17,7 +17,6 @@ services:
       - traefik.http.routers.dauth.tls=true
       - traefik.http.routers.dauth.tls.certresolver=myresolver
       - traefik.http.routers.dauth.entrypoints=websecure
-      - traefik.http.routers.dauth.entrypoints
       - traefik.wss.protocol=https
 
   traefik:
