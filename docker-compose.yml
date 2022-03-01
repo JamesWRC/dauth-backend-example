@@ -31,7 +31,9 @@ services:
     env_file:
       - .env
     # Any command for Traefik should be appended in the entrypoint below in the 'entrypoint'.
-    entrypoint: sh -c "sleep 30 && ./entrypoint.sh"
+    command:
+      - "--api=true"
+    entrypoint: sh -c "sleep 30 && ./entrypoint.sh --api=true"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.dashboard.rule=Host(`traefik-${SUBDOMAIN}.${ZONE}`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
