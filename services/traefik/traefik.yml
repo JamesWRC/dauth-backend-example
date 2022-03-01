@@ -4,6 +4,7 @@ log:
 api:
   insecure: false
   dashboard: true
+  debug: true
 
 entryPoints:
   websecure:
