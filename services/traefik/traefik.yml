@@ -2,8 +2,8 @@ log:
   level: DEBUG
 
 api:
+  insecure: false
   dashboard: true
-  insecure: true
 
 entryPoints:
   websecure:
