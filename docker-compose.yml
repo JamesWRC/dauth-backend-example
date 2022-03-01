@@ -43,7 +43,7 @@ services:
       - "traefik.http.routers.dashboard.service=api@internal"
       - "traefik.http.routers.dashboard.middlewares=auth"
 
-      - "traefik.http.middlewares.auth.basicauth.users=soc1:$2y$10$ojFNU//NrF4dMMHUryWzpuIGc/nhiW8LJX7F/t4tYNDQH1WhZr8im"
+      - "traefik.http.middlewares.auth.basicauth.users=soc1:$$2y$$10$ojFNU//NrF4dMMHUryWzpuIGc/nhiW8LJX7F/t4tYNDQH1WhZr8im"
 
       # - "traefik.http.routers.dashboard.middlewares: basic-auth-global"
       # Can use a single user like below, Uncomment line below, follow details here #https://doc.traefik.io/traefik/v2.0/middlewares/basicauth/
