@@ -3,12 +3,24 @@ services:
   
   cloudflare-ddns:
     image: oznu/cloudflare-ddns:latest
-    # env_file Will be overriden by the environmen variables in elasticbeanstalk configuration.
+    # env_file Will be overriden by the environment variables in elasticbeanstalk configuration.
     env_file:
       - .env
+
+  # This is a copy of the cloudflare-ddns, however this updates the traefic domain. If you dont want to access
+  # the traefik dashboard / API then you can remove this container.
+  traefik-cloudflare-ddns:
+    image: oznu/cloudflare-ddns:latest
+    # env_file Will be overriden by the environment variables in elasticbeanstalk configuration.
+    environment:
+      - API_KEY=${API_KEY}
+      - ZONE=${ZONE}
+      - SUBDOMAIN=trafik-${ZONE}
+      - PROXIED=true
+
   dauth:
     image: jameswrc/dauthbackend:arm64v8
-    # env_file Will be overriden by the environmen variables in elasticbeanstalk configuration.
+    # env_file Will be overriden by the environment variables in elasticbeanstalk configuration.
     env_file:
       - .env 
     labels:
@@ -54,6 +66,8 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "./services/traefik/:/etc/traefik/"
   
+  # Used to keep the acme.json certificated across the different spot ec2 instances.
+  # If you are not useing ec2 spot instances then you can remove this container.
   cf_acme_kv_cache:
     image: jameswrc/cfacmekvcache:arm64v8
     env_file:
