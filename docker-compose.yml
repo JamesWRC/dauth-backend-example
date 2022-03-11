@@ -45,8 +45,7 @@ services:
     # Any command for Traefik should be appended in the entrypoint below in the 'entrypoint'.
     command:
       - "--api=true"
-      - "--pilot.token=2cff19b9-7ccd-4071-8ff4-0b87467c0f1d"
-    entrypoint: sh -c "sleep 30 && ./entrypoint.sh --api=true --pilot.token=2cff19b9-7ccd-4071-8ff4-0b87467c0f1d"
+    entrypoint: sh -c "sleep 30 && ./entrypoint.sh --api=true"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.dashboard.rule=Host(`traefik-${SUBDOMAIN}.${ZONE}`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
