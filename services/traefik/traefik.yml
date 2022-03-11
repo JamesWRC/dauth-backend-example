@@ -1,6 +1,8 @@
 log:
   level: DEBUG
-
+  
+pilot:
+    token: '{{ env "TRAEFIK_PILOT_TOKEN" }}'
 
 api:
   insecure: false
