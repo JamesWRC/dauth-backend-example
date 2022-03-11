@@ -15,7 +15,7 @@ services:
     environment:
       - API_KEY=${API_KEY}
       - ZONE=${ZONE}
-      - SUBDOMAIN=trafik-${ZONE}
+      - SUBDOMAIN=trafik-${SUBDOMAIN}
       - PROXIED=true
 
   dauth:
