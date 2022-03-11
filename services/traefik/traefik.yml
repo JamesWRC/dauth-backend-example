@@ -1,7 +1,6 @@
 log:
   level: DEBUG
-pilot:
-    token: "72208180-4b58-409d-be57-09cbd0c4fbba"
+
 
 api:
   insecure: false
